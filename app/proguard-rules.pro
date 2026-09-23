@@ -1,0 +1,5 @@
+-keep class com.adi.spamv4.** { *; }
+-keepattributes Signature
+-keepattributes *Annotation*
+-dontwarn okhttp3.**
+-dontwarn okio.**

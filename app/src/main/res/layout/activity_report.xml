@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_dark"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="MASS REPORTER"
+            android:textColor="@color/accent_pink"
+            android:textSize="18sp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="TARGET"
+            android:textColor="@color/accent_pink"
+            android:textSize="11sp"
+            android:textStyle="bold"/>
+
+        <EditText
+            android:id="@+id/etTarget"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:hint="target username"
+            android:inputType="text"
+            android:textColor="@color/text_white"
+            android:textColorHint="@color/text_dim"
+            android:backgroundTint="@color/accent_pink"
+            android:padding="14dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="REPORT REASONS"
+            android:textColor="@color/accent_pink"
+            android:textSize="11sp"
+            android:textStyle="bold"/>
+
+        <LinearLayout
+            android:id="@+id/optionsContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:orientation="vertical"/>
+
+        <CheckBox
+            android:id="@+id/cbSelectAll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="select all"
+            android:textColor="@color/accent_green"
+            android:buttonTint="@color/accent_green"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="SETTINGS"
+            android:textColor="@color/accent_pink"
+            android:textSize="11sp"
+            android:textStyle="bold"/>
+
+        <EditText
+            android:id="@+id/etSleep"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:hint="sleep seconds"
+            android:inputType="number"
+            android:text="5"
+            android:textColor="@color/text_white"
+            android:textColorHint="@color/text_dim"
+            android:backgroundTint="@color/accent_pink"
+            android:padding="14dp"/>
+
+        <EditText
+            android:id="@+id/etReportsPerAccount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:hint="reports per account"
+            android:inputType="number"
+            android:text="3"
+            android:textColor="@color/text_white"
+            android:textColorHint="@color/text_dim"
+            android:backgroundTint="@color/accent_pink"
+            android:padding="14dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="ACCOUNTS POOL"
+            android:textColor="@color/accent_pink"
+            android:textSize="11sp"
+            android:textStyle="bold"/>
+
+        <EditText
+            android:id="@+id/etAccounts"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:gravity="top|start"
+            android:minLines="3"
+            android:inputType="textMultiLine"
+            android:textColor="@color/text_white"
+            android:textColorHint="@color/text_dim"
+            android:backgroundTint="@color/accent_pink"
+            android:padding="14dp"
+            android:fontFamily="monospace"
+            android:textSize="11sp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="PROXIES"
+            android:textColor="@color/accent_pink"
+            android:textSize="11sp"
+            android:textStyle="bold"/>
+
+        <EditText
+            android:id="@+id/etProxies"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:gravity="top|start"
+            android:minLines="3"
+            android:inputType="textMultiLine"
+            android:textColor="@color/text_white"
+            android:textColorHint="@color/text_dim"
+            android:backgroundTint="@color/accent_pink"
+            android:padding="14dp"
+            android:fontFamily="monospace"
+            android:textSize="11sp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnStart"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/accent_green"
+                android:text="START"
+                android:textColor="@color/text_white"/>
+
+            <Space
+                android:layout_width="10dp"
+                android:layout_height="wrap_content"/>
+
+            <Button
+                android:id="@+id/btnStop"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/accent_red"
+                android:enabled="false"
+                android:text="STOP"
+                android:textColor="@color/text_white"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@color/bg_panel"
+            android:padding="12dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tvStatOk"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="OK 0"
+                android:textColor="@color/accent_green"
+                android:textSize="12sp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/tvStatFail"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="FAIL 0"
+                android:textColor="@color/accent_red"
+                android:textSize="12sp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/tvStatAcc"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="ACC 0/0"
+                android:textColor="@color/text_white"
+                android:textSize="12sp"
+                android:textStyle="bold"/>
+        </LinearLayout>
+
+        <ScrollView
+            android:id="@+id/logScroll"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginTop="12dp"
+            android:background="@color/bg_panel">
+
+            <TextView
+                android:id="@+id/tvLog"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="monospace"
+                android:padding="10dp"
+                android:textColor="@color/text_green"
+                android:textSize="10sp"/>
+        </ScrollView>
+
+    </LinearLayout>
+</ScrollView>

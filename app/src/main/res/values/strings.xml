@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">AdiSpamV4</string>
+    <string name="channel_name">Report Service</string>
+    <string name="channel_desc">AdiSpamV4 reporting in progress</string>
+</resources>
