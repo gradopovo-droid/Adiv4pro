@@ -62,15 +62,13 @@ class MainActivity : AppCompatActivity() {
     private fun refreshSession() {
         val s = Prefs.load(this)
         tvSession.text = if (s == null) "no active session"
-        else "logged in as @" + s.username + " ok"
+        else "logged in as @" + s.username + " ✓"
     }
 
     fun onLoginComplete(username: String, sessionId: String, csrf: String) {
-        val safeUser = username.ifEmpty { "(from web)" }
-        Prefs.save(this, Prefs.Session(safeUser, sessionId, csrf))
         runOnUiThread {
             refreshSession()
-            popup("Logged In", "session captured\n@" + safeUser)
+            popup("Logged In", "session captured\n@$username")
         }
     }
 

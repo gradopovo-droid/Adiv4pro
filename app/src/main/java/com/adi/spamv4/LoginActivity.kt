@@ -1,96 +1,120 @@
 package com.adi.spamv4
 
-import android.annotation.SuppressLint
 import android.app.AlertDialog
-import android.graphics.Bitmap
 import android.os.Bundle
-import android.webkit.*
+import android.view.View
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class LoginActivity : AppCompatActivity() {
 
-    private var capturedSession: String? = null
-    private var capturedCsrf: String? = null
-    private var popupShown = false
-
-    @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login)
 
-        val web = findViewById<WebView>(R.id.webview)
-        val progress = findViewById<android.widget.ProgressBar>(R.id.progress)
-
-        web.settings.apply {
-            javaScriptEnabled = true
-            domStorageEnabled = true
-            databaseEnabled = true
-            cacheMode = WebSettings.LOAD_DEFAULT
-            userAgentString = IgApi.UA
+        // Build UI programmatically — no XML needed
+        val root = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setBackgroundColor(0xFF0B0B0F.toInt())
+            setPadding(50, 80, 50, 50)
         }
 
-        val cm = CookieManager.getInstance()
-        cm.setAcceptCookie(true)
-        cm.setAcceptThirdPartyCookies(web, true)
+        val title = TextView(this).apply {
+            text = "Login to Instagram"
+            setTextColor(0xFFE91E63.toInt())
+            textSize = 22f
+            setPadding(0, 0, 0, 30)
+        }
 
-        web.webViewClient = object : WebViewClient() {
-            override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
-                progress.visibility = android.view.View.VISIBLE
-                if (url == null) return
+        val etUser = EditText(this).apply {
+            hint = "username"
+            setTextColor(0xFFFFFFFF.toInt())
+            setHintTextColor(0xFF888888.toInt())
+            backgroundTintList = android.content.res.ColorStateList.valueOf(0xFFE91E63.toInt())
+        }
 
-                cm.getCookie(url)?.split(";")?.forEach { c ->
-                    val t = c.trim()
-                    if (t.startsWith("sessionid=")) capturedSession = t.substringAfter("sessionid=")
-                    if (t.startsWith("csrftoken=")) capturedCsrf = t.substringAfter("csrftoken=")
-                }
+        val etPass = EditText(this).apply {
+            hint = "password"
+            inputType = android.text.InputType.TYPE_CLASS_TEXT or
+                    android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD
+            setTextColor(0xFFFFFFFF.toInt())
+            setHintTextColor(0xFF888888.toInt())
+            backgroundTintList = android.content.res.ColorStateList.valueOf(0xFFE91E63.toInt())
+        }
+
+        val btn = Button(this).apply {
+            text = "LOGIN"
+            setBackgroundColor(0xFFE91E63.toInt())
+            setTextColor(0xFFFFFFFF.toInt())
+        }
+
+        val progress = ProgressBar(this).apply {
+            visibility = View.GONE
+        }
+
+        val tvStatus = TextView(this).apply {
+            setTextColor(0xFF7CFC00.toInt())
+            textSize = 12f
+            setPadding(0, 20, 0, 0)
+        }
+
+        root.addView(title)
+        root.addView(etUser)
+        root.addView(etPass)
+        root.addView(btn)
+        root.addView(progress)
+        root.addView(tvStatus)
+        setContentView(root)
+
+        btn.setOnClickListener {
+            val user = etUser.text.toString().trim()
+            val pass = etPass.text.toString()
+
+            if (user.isEmpty() || pass.isEmpty()) {
+                popup("Missing Fields", "Username aur password dono daalo.")
+                return@setOnClickListener
             }
 
-            override fun onPageFinished(view: WebView?, url: String?) {
-                progress.visibility = android.view.View.GONE
-                if (url == null) return
+            btn.isEnabled = false
+            progress.visibility = View.VISIBLE
+            tvStatus.text = "logging in..."
 
-                if (url == "https://www.instagram.com/" &&
-                    capturedSession != null && capturedCsrf != null
-                ) {
-                    finishSuccess()
-                    return
+            lifecycleScope.launch {
+                val result = withContext(Dispatchers.IO) {
+                    val api = IgApi()
+                    api.loginWithPassword(api.client, user, pass)
                 }
 
-                if (url.contains("/accounts/login")) {
-                    view?.evaluateJavascript(
-                        "(function(){var e=document.querySelector('#slfErrorAlert,[data-testid=\"login-error-message\"],._ab2z');return e?e.innerText:'';})();"
-                    ) { r ->
-                        val txt = (r ?: "").lowercase()
-                        if (!popupShown && (
-                                    txt.contains("password") || txt.contains("incorrect") ||
-                                            txt.contains("username") || txt.contains("sorry") ||
-                                            txt.contains("challenge") || txt.contains("suspended")
-                                    )
-                        ) {
-                            popupShown = true
-                            showErr("Login Failed",
-                                "Username ya password galat hai, ya IG ne challenge bheja. dobara try karo.")
-                        }
-                    }
+                progress.visibility = View.GONE
+                btn.isEnabled = true
+
+                if (result != null) {
+                    // save session
+                    Prefs.save(
+                        this@LoginActivity,
+                        Prefs.Session(user, result.sessionId, result.csrf, result.userId)
+                    )
+                    tvStatus.text = "logged in as @$user"
+                    MainActivity.instance?.onLoginComplete(user, result.sessionId, result.csrf)
+                    finish()
+                } else {
+                    tvStatus.text = ""
+                    popup("Login Failed",
+                        "Username ya password galat hai, ya IG ne challenge bheja.\n\n" +
+                        "Agar 2FA on hai to webview waala version use karo.")
                 }
             }
         }
-
-        web.loadUrl("https://www.instagram.com/accounts/login/")
     }
 
-    private fun showErr(title: String, msg: String) {
+    private fun popup(title: String, msg: String) {
         AlertDialog.Builder(this)
             .setTitle(title)
             .setMessage(msg)
-            .setPositiveButton("OK") { _, _ -> finish() }
-            .setCancelable(false)
+            .setPositiveButton("OK", null)
             .show()
-    }
-
-    private fun finishSuccess() {
-        val user = intent.getStringExtra("username") ?: ""
-        MainActivity.instance?.onLoginComplete(user, capturedSession!!, capturedCsrf!!)
-        finish()
     }
 }

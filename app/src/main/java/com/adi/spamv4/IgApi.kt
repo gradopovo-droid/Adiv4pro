@@ -39,7 +39,7 @@ class IgApi {
         try {
             val primeReq = Request.Builder()
                 .url("https://www.instagram.com/accounts/login/")
-                .header("User-Agent", UA)
+                .header("User-Agent", BROWSER_UA)
                 .build()
             client.newCall(primeReq).execute().use { res ->
                 csrf = res.headers("Set-Cookie")
@@ -149,7 +149,7 @@ class IgApi {
     } catch (e: Exception) { false }
 
     companion object {
-        const val UA = "Mozilla/5.0 (Linux; Android 13; SM-S918B) AppleWebKit/537.36 " +
-                "(KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36"
+        const val UA = "Instagram 269.0.0.18.75 Android (30/11; 320dpi; 720x1440; samsung; SM-A105F; a10; qcom; en_US; 458229237)"
+        const val BROWSER_UA = "Mozilla/5.0 (Linux; Android 13; SM-S918B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36"
     }
 }
